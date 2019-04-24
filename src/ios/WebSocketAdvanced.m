@@ -11,16 +11,16 @@
     NSNumber* timeout =         [wsOptions valueForKey:@"timeout"];
     NSNumber* pingInterval =    [wsOptions valueForKey:@"pingInterval"];
     NSDictionary* wsHeaders =   [wsOptions valueForKey:@"headers"];
-    BOOL acceptAllCerts =       [wsOptions valueForKey:@"acceptAllCerts"];
+	BOOL acceptAllCerts =  YES;     //[wsOptions valueForKey:@"acceptAllCerts"];
 
     _messageBuffer =            [[NSMutableArray alloc] init];
 
     NSTimeInterval timeoutInterval = timeout ? (timeout.doubleValue / 1000) : 0;
-    _pingInterval = pingInterval ? (pingInterval.doubleValue / 1000) : 0;
+	_pingInterval = 0;//pingInterval ? (pingInterval.doubleValue / 1000) : 0;
     
     self.webSocketId = [[NSUUID UUID] UUIDString];
 
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:wsUrl]
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:wsUrl]
                                                         cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                         timeoutInterval:timeoutInterval];
 
@@ -29,7 +29,7 @@
     }
 
     _webSocket = [[SRWebSocket alloc] initWithURLRequest:request
-                                      protocols:nil
+                                      protocols:@[@"sip"]
                                       allowsUntrustedSSLCertificates:acceptAllCerts];
     
     _webSocket.delegate = self;
