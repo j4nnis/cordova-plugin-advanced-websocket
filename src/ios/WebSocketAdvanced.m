@@ -7,16 +7,17 @@
                 commandDelegate:(id<CDVCommandDelegate>)commandDelegate
                 callbackId:(NSString*)callbackId;
 {
-    NSString* wsUrl =           [wsOptions valueForKey:@"url"];
-    NSNumber* timeout =         [wsOptions valueForKey:@"timeout"];
-    NSNumber* pingInterval =    [wsOptions valueForKey:@"pingInterval"];
-    NSDictionary* wsHeaders =   [wsOptions valueForKey:@"headers"];
-	BOOL acceptAllCerts =  YES;     //[wsOptions valueForKey:@"acceptAllCerts"];
+	NSString* wsUrl =           [wsOptions valueForKey:@"url"];
+	NSString* protocol =        [wsOptions valueForKey:@"protocol"];
+	NSNumber* timeout =		    [wsOptions valueForKey:@"timeout"];
+	NSNumber* pingInterval =    [wsOptions valueForKey:@"pingInterval"];
+	NSDictionary* wsHeaders =   [wsOptions valueForKey:@"headers"];
+	BOOL acceptAllCerts =		[wsOptions valueForKey:@"acceptAllCerts"];
 
     _messageBuffer =            [[NSMutableArray alloc] init];
 
-    NSTimeInterval timeoutInterval = timeout ? (timeout.doubleValue / 1000) : 0;
-	_pingInterval = 0;//pingInterval ? (pingInterval.doubleValue / 1000) : 0;
+	NSTimeInterval timeoutInterval = timeout ? (timeout.doubleValue / 1000) : 0;
+	_pingInterval = pingInterval ? (pingInterval.doubleValue / 1000) : 0;
     
     self.webSocketId = [[NSUUID UUID] UUIDString];
 
@@ -29,7 +30,7 @@
     }
 
     _webSocket = [[SRWebSocket alloc] initWithURLRequest:request
-                                      protocols:@[@"sip"]
+                                      protocols:protocol ? @[protocol] : nil
                                       allowsUntrustedSSLCertificates:acceptAllCerts];
     
     _webSocket.delegate = self;
